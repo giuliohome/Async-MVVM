@@ -1,0 +1,25 @@
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+public static class MyStaticService
+{
+    private static int count = 0;
+    public static async Task<int> CountBytesInUrlAsync(string url)
+    {
+        // Artificial delay to show responsiveness.
+        await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+        // Download the actual data and count it.
+        using (var client = new HttpClient())
+        {
+            var data = await client.GetByteArrayAsync(url).ConfigureAwait(false);
+            return data.Length;
+        }
+    }
+    public static Task<int> ImmediateSet(int my_res, int res)
+    {
+        my_res = res;
+        var tcs = new TaskCompletionSource<int>();
+        tcs.SetResult(res);
+        return tcs.Task;
+    }
+}
